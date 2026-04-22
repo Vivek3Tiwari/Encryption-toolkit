@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Encryption Toolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body data-theme="dark">
+    <div class="background"></div>
+    <main class="app">
+      <header class="hero">
+        <div>
+          <p class="badge">Crypto Lab</p>
+          <h1>Encryption Toolkit</h1>
+          <p class="subtitle">
+            Explore multiple encryption techniques in one polished interface.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button id="themeToggle" class="secondary">Switch Theme</button>
+        </div>
+      </header>
+
+      <section class="top-tools">
+        <input id="cipherSearch" type="text" placeholder="Search cipher section..." />
+        <button id="exportWorkspace" class="ghost">Export Workspace</button>
+        <label for="importWorkspace" class="file-label">Import Workspace</label>
+        <input id="importWorkspace" type="file" accept=".json,application/json" hidden />
+        <button id="runSelfTest" class="secondary">Run Self Test</button>
+        <span id="securityBadge" class="security-badge">Security: Unknown</span>
+      </section>
+
+      <div class="content-grid">
+        <section>
+          <nav class="tech-nav" id="techNav"></nav>
+          <section class="panel-grid">
+        <article class="panel active" data-tech="caesar">
+          <h2>Caesar Cipher</h2>
+          <p class="panel-description">
+            Shift each alphabetic character by a fixed number.
+          </p>
+          <label>Input Text</label>
+          <textarea id="caesarInput" rows="4" placeholder="Enter plain text"></textarea>
+          <label>Shift (0-25)</label>
+          <input id="caesarShift" type="number" min="0" max="25" value="3" />
+          <p class="example-note">Example: HELLO with shift 3 -> KHOOR</p>
+          <div class="btn-row">
+            <button id="caesarEncrypt">Encrypt</button>
+            <button id="caesarDecrypt" class="secondary">Decrypt</button>
+            <button data-copy-target="caesarOutput" class="ghost">Copy Result</button>
+          </div>
+          <label>Result</label>
+          <textarea id="caesarOutput" rows="4" readonly></textarea>
+        </article>
+
+        <article class="panel" data-tech="vigenere">
+          <h2>Vigenere Cipher</h2>
+          <p class="panel-description">
+            Use a keyword to apply a variable shift per character.
+          </p>
+          <label>Input Text</label>
+          <textarea id="vigenereInput" rows="4" placeholder="Enter plain text"></textarea>
+          <label>Keyword (letters only)</label>
+          <input id="vigenereKey" type="text" placeholder="e.g. secure" />
+          <p class="example-note">Example: ATTACKATDAWN + LEMON -> LXFOPVEFRNHR</p>
+          <div class="btn-row">
+            <button id="vigenereEncrypt">Encrypt</button>
+            <button id="vigenereDecrypt" class="secondary">Decrypt</button>
+            <button data-copy-target="vigenereOutput" class="ghost">Copy Result</button>
+          </div>
+          <label>Result</label>
+          <textarea id="vigenereOutput" rows="4" readonly></textarea>
+        </article>
+
+        <article class="panel" data-tech="aes">
+          <h2>AES-GCM</h2>
+          <p class="panel-description">
+            Strong symmetric encryption using your passphrase (Web Crypto API).
+          </p>
+          <label>Input Text</label>
+          <textarea id="aesInput" rows="4" placeholder="Enter text"></textarea>
+          <label>Passphrase</label>
+          <input id="aesPassphrase" type="password" placeholder="Strong passphrase" />
+          <p class="example-note">Use 12+ character passphrases for better security.</p>
+          <div class="btn-row">
+            <button id="aesEncrypt">Encrypt</button>
+            <button id="aesDecrypt" class="secondary">Decrypt</button>
+            <button data-copy-target="aesOutput" class="ghost">Copy Result</button>
+          </div>
+          <label>Result (Base64 bundle)</label>
+          <textarea id="aesOutput" rows="4" readonly></textarea>
+        </article>
+
+        <article class="panel" data-tech="des">
+          <h2>DES</h2>
+          <p class="panel-description">
+            Encrypt/decrypt text using DES (CryptoJS).
+          </p>
+          <label>Input Text</label>
+          <textarea id="desInput" rows="4" placeholder="Enter text or ciphertext"></textarea>
+          <label>Key</label>
+          <input id="desKey" type="password" placeholder="DES key" />
+          <label>Algorithm</label>
+          <select id="desMode">
+            <option value="DES">DES</option>
+            <option value="TripleDES">3DES</option>
+          </select>
+          <p class="example-note">3DES is safer than DES but still legacy.</p>
+          <div class="btn-row">
+            <button id="desEncrypt">Encrypt</button>
+            <button id="desDecrypt" class="secondary">Decrypt</button>
+            <button data-copy-target="desOutput" class="ghost">Copy Result</button>
+          </div>
+          <label>Result</label>
+          <textarea id="desOutput" rows="4" readonly></textarea>
+        </article>
+
+        <article class="panel" data-tech="sha256">
+          <h2>SHA-256 Hash</h2>
+          <p class="panel-description">
+            Generate a secure one-way digest for integrity checks.
+          </p>
+          <label>Input Text</label>
+          <textarea id="hashInput" rows="4" placeholder="Enter text to hash"></textarea>
+          <div class="btn-row">
+            <button id="hashGenerate">Generate Hash</button>
+            <button data-copy-target="hashOutput" class="ghost">Copy Result</button>
+          </div>
+          <label>Hash (Hex)</label>
+          <textarea id="hashOutput" rows="4" readonly></textarea>
+        </article>
+
+        <article class="panel" data-tech="hill">
+          <h2>Hill Cipher (2x2)</h2>
+          <p class="panel-description">
+            Matrix-based substitution cipher using a 2x2 key matrix.
+          </p>
+          <label>Input Text</label>
+          <textarea id="hillInput" rows="4" placeholder="Letters only (A-Z)"></textarea>
+          <label>Key Matrix (a,b,c,d)</label>
+          <input id="hillKey" type="text" placeholder="e.g. 3,3,2,5" />
+          <p class="example-note">Example key 3,3,2,5 and text HELP -> HIAT</p>
+          <div class="btn-row">
+            <button id="hillEncrypt">Encrypt</button>
+            <button id="hillDecrypt" class="secondary">Decrypt</button>
+            <button data-copy-target="hillOutput" class="ghost">Copy Result</button>
+          </div>
+          <label>Result</label>
+          <textarea id="hillOutput" rows="4" readonly></textarea>
+        </article>
+
+        <article class="panel" data-tech="playfair">
+          <h2>Playfair Cipher</h2>
+          <p class="panel-description">
+            Digraph substitution using a 5x5 key square (I/J combined).
+          </p>
+          <label>Input Text</label>
+          <textarea id="playfairInput" rows="4" placeholder="Letters only"></textarea>
+          <label>Keyword</label>
+          <input id="playfairKey" type="text" placeholder="e.g. monarchy" />
+          <p class="example-note">Pairs repeated letters with filler X (I/J treated same).</p>
+          <div class="btn-row">
+            <button id="playfairEncrypt">Encrypt</button>
+            <button id="playfairDecrypt" class="secondary">Decrypt</button>
+            <button data-copy-target="playfairOutput" class="ghost">Copy Result</button>
+          </div>
+          <label>Result</label>
+          <textarea id="playfairOutput" rows="4" readonly></textarea>
+        </article>
+
+        <article class="panel" data-tech="columnar">
+          <h2>Columnar Transposition</h2>
+          <p class="panel-description">
+            Reorder characters by reading columns based on a keyword.
+          </p>
+          <label>Input Text</label>
+          <textarea id="columnarInput" rows="4" placeholder="Enter text"></textarea>
+          <label>Keyword</label>
+          <input id="columnarKey" type="text" placeholder="e.g. ZEBRA" />
+          <p class="example-note">Keyword controls column read order alphabetically.</p>
+          <div class="btn-row">
+            <button id="columnarEncrypt">Encrypt</button>
+            <button id="columnarDecrypt" class="secondary">Decrypt</button>
+            <button data-copy-target="columnarOutput" class="ghost">Copy Result</button>
+          </div>
+          <label>Result</label>
+          <textarea id="columnarOutput" rows="4" readonly></textarea>
+        </article>
+
+        <article class="panel" data-tech="railfence">
+          <h2>Rail Fence Cipher</h2>
+          <p class="panel-description">
+            Zig-zag transposition cipher based on rail count.
+          </p>
+          <label>Input Text</label>
+          <textarea id="railInput" rows="4" placeholder="Enter text"></textarea>
+          <label>Rails</label>
+          <input id="railKey" type="number" min="2" max="20" value="3" />
+          <p class="example-note">Rail visualization appears after encrypt/decrypt.</p>
+          <div class="btn-row">
+            <button id="railEncrypt">Encrypt</button>
+            <button id="railDecrypt" class="secondary">Decrypt</button>
+            <button data-copy-target="railOutput" class="ghost">Copy Result</button>
+          </div>
+          <label>Result</label>
+          <textarea id="railOutput" rows="4" readonly></textarea>
+          <label>Rail Pattern</label>
+          <pre id="railPattern" class="viz-box"></pre>
+        </article>
+
+        <article class="panel" data-tech="rsa">
+          <h2>RSA Toolkit</h2>
+          <p class="panel-description">
+            Generate key pairs, encrypt/decrypt text, and sign/verify data.
+          </p>
+          <div class="btn-row">
+            <button id="rsaGenerate">Generate Key Pair</button>
+          </div>
+          <label>Public Key (Base64 SPKI)</label>
+          <textarea id="rsaPublicKey" rows="4"></textarea>
+          <label>Private Key (Base64 PKCS8)</label>
+          <textarea id="rsaPrivateKey" rows="4"></textarea>
+          <label>Message</label>
+          <textarea id="rsaMessage" rows="4" placeholder="Text to encrypt or sign"></textarea>
+          <div class="btn-row">
+            <button id="rsaEncrypt">Encrypt</button>
+            <button id="rsaDecrypt" class="secondary">Decrypt</button>
+          </div>
+          <label>Ciphertext (Base64)</label>
+          <textarea id="rsaCipher" rows="3"></textarea>
+          <div class="btn-row">
+            <button id="rsaSign">Sign</button>
+            <button id="rsaVerify" class="secondary">Verify</button>
+          </div>
+          <label>Signature (Base64)</label>
+          <textarea id="rsaSignature" rows="3"></textarea>
+          <label>RSA Output</label>
+          <textarea id="rsaOutput" rows="3" readonly></textarea>
+          <div class="btn-row">
+            <button data-copy-target="rsaOutput" class="ghost">Copy Result</button>
+          </div>
+        </article>
+
+        <article class="panel" data-tech="file">
+          <h2>File Encryption</h2>
+          <p class="panel-description">
+            Encrypt or decrypt files with AES-GCM and download the result.
+          </p>
+          <label>Select File</label>
+          <input id="fileInput" type="file" />
+          <label>Passphrase</label>
+          <input id="filePassphrase" type="password" placeholder="File passphrase" />
+          <p class="example-note">Download output as encrypted .enc.json bundle.</p>
+          <div class="btn-row">
+            <button id="fileEncrypt">Encrypt File</button>
+            <button id="fileDecrypt" class="secondary">Decrypt File</button>
+          </div>
+          <label>Status</label>
+          <textarea id="fileStatus" rows="3" readonly></textarea>
+        </article>
+      </section>
+        </section>
+
+        <aside class="history-panel">
+          <h3>Operation History</h3>
+          <p class="panel-description">Recent actions in this browser session.</p>
+          <div class="btn-row">
+            <button id="clearHistory" class="secondary">Clear History</button>
+          </div>
+          <label>Self Test Log</label>
+          <textarea id="selfTestOutput" rows="6" readonly></textarea>
+          <ul id="historyList"></ul>
+        </aside>
+      </div>
+    </main>
+    <div id="toastContainer" class="toast-container"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
